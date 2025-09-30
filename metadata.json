@@ -1,0 +1,5 @@
+{
+  "name": "Voice Clone",
+  "description": "An application that simulates voice cloning. Upload a video to 'analyze' an audio sample, then write some text to generate high-quality synthetic speech with a similar voice. Note: This app uses a pre-set voice for generation.",
+  "requestFramePermissions": []
+}

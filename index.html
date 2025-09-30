@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Voice Clone</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+      // Mock process.env for browser environment
+      window.process = {
+        env: {
+          // ⚠️ تحذير: هاد المفتاح كيكون باين لأي واحد كيشوف الكود ديال الصفحة
+          // من الأفضل تستعمل مفتاح مؤقت للتجربة فقط
+          API_KEY: 'YOUR_GEMINI_API_KEY' // IMPORTANT: Replace with your actual Gemini API key
+        }
+      };
+    </script>
+    <style>
+      body {
+        font-family: 'Inter', sans-serif;
+      }
+      @import url('https://rsms.me/inter/inter.css');
+    </style>
+    <script type="importmap">
+{
+  "imports": {
+    "react": "https://esm.sh/react@18.2.0",
+    "react-dom/client": "https://esm.sh/react-dom@18.2.0/client",
+    "@google/genai": "https://esm.sh/@google/genai@latest",
+    "react-dom/": "https://aistudiocdn.com/react-dom@^19.1.1/",
+    "react/": "https://aistudiocdn.com/react@^19.1.1/"
+  }
+}
+</script>
+    <!-- 1. تمت إضافة مكتبة Babel هنا -->
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+  </head>
+  <body class="bg-gray-900 text-white antialiased">
+    <div id="root"></div>
+    <!-- 2. تم تصحيح مسار السكريبت ليصبح نسبياً بشكل صريح -->
+    <script type="text/babel" data-type="module" src="./index.tsx"></script>
+  </body>
+</html>
