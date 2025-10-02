@@ -95,8 +95,11 @@ function pcmToWav(pcmData: Uint8Array): Blob {
     return new Blob([view], { type: 'audio/wav' });
 }
 
+export const PREBUILT_VOICES = ['Zephyr', 'Puck', 'Charon', 'Kore', 'Fenrir'] as const;
+export type PrebuiltVoice = typeof PREBUILT_VOICES[number];
 
-export const generateAudioFromText = (text: string): Promise<string> => {
+
+export const generateAudioFromText = (text: string, voice: PrebuiltVoice = 'Zephyr'): Promise<string> => {
     return new Promise((resolve, reject) => {
         if (!process.env.API_KEY || process.env.API_KEY === 'YOUR_GEMINI_API_KEY') {
             return reject(new Error("Please provide your Gemini API key in index.html."));
@@ -155,10 +158,9 @@ export const generateAudioFromText = (text: string): Promise<string> => {
                     },
                 },
                 config: {
-                    responseModalities: [Modality.AUDIO], // CORRECTED: Use the Modality enum
+                    responseModalities: [Modality.AUDIO],
                     speechConfig: {
-                        // Other voices: 'Puck', 'Charon', 'Kore', 'Fenrir'
-                        voiceConfig: { prebuiltVoiceConfig: { voiceName: 'Zephyr' } },
+                        voiceConfig: { prebuiltVoiceConfig: { voiceName: voice } },
                     },
                     systemInstruction: systemInstruction,
                 },

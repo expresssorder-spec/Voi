@@ -1,5 +1,5 @@
 import React, { useState, useCallback, ChangeEvent } from 'react';
-import { generateAudioFromText } from './services/geminiService.ts';
+import { generateAudioFromText, PREBUILT_VOICES, PrebuiltVoice } from './services/geminiService.ts';
 
 // --- Icon Components ---
 const UploadIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -46,6 +46,7 @@ const App: React.FC = () => {
     const [textToSpeak, setTextToSpeak] = useState('');
     const [audioUrl, setAudioUrl] = useState<string | null>(null);
     const [error, setError] = useState<string | null>(null);
+    const [selectedVoice, setSelectedVoice] = useState<PrebuiltVoice>('Zephyr');
 
     const handleFileChange = (event: ChangeEvent<HTMLInputElement>) => {
         const file = event.target.files?.[0];
@@ -71,7 +72,7 @@ const App: React.FC = () => {
         setAudioUrl(null);
 
         try {
-            const url = await generateAudioFromText(textToSpeak);
+            const url = await generateAudioFromText(textToSpeak, selectedVoice);
             setAudioUrl(url);
         } catch (err: unknown) {
             const errorMessage = err instanceof Error ? err.message : 'An unknown error occurred.';
@@ -80,7 +81,7 @@ const App: React.FC = () => {
         } finally {
             setIsGenerating(false);
         }
-    }, [textToSpeak, isGenerating]);
+    }, [textToSpeak, isGenerating, selectedVoice]);
     
     return (
         <div className="min-h-screen bg-gray-900 flex flex-col items-center justify-center p-4 selection:bg-teal-400/20">
@@ -161,8 +162,30 @@ const App: React.FC = () => {
                         <div className="space-y-4">
                             <div>
                                 <h2 className="text-xl font-semibold text-white">Step 2: Generate Speech</h2>
-                                <p className="text-gray-400 mt-1">Write the text you want to generate with the analyzed voice.</p>
+                                <p className="text-gray-400 mt-1">Select a voice, then write the text you want to generate.</p>
                             </div>
+                            
+                            <div>
+                                <h3 className="text-sm font-medium text-gray-300 mb-2">Choose a Voice</h3>
+                                <div className="flex flex-wrap gap-2">
+                                    {PREBUILT_VOICES.map((voice) => (
+                                        <button
+                                            key={voice}
+                                            onClick={() => setSelectedVoice(voice)}
+                                            disabled={!voiceAnalyzed || isGenerating}
+                                            className={`px-4 py-2 text-sm font-semibold rounded-full transition-colors duration-200 border ${
+                                                selectedVoice === voice
+                                                    ? 'bg-purple-600 border-purple-500 text-white'
+                                                    : 'bg-gray-700/50 border-gray-600 text-gray-300 hover:bg-gray-700 hover:border-gray-500'
+                                            } disabled:opacity-50 disabled:cursor-not-allowed`}
+                                            aria-pressed={selectedVoice === voice}
+                                        >
+                                            {voice}
+                                        </button>
+                                    ))}
+                                </div>
+                            </div>
+
                             <textarea
                                 value={textToSpeak}
                                 onChange={(e) => setTextToSpeak(e.target.value)}
